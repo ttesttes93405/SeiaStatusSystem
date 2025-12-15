@@ -12,6 +12,11 @@
 
   </PropertyGroup>
 
+  <Target Name="CopyToUnity" AfterTargets="Build">
+    <Copy SourceFiles="$(OutputPath)/SeiaStatusSystem.Core.dll" DestinationFolder="$(SolutionDir)/SeiaStatusSystem.Unity/Assets/SeiaStatusSystem/Core/" />
+  </Target>
+
+
   <ItemGroup>
     <Compile Include="**/*.cs" Exclude="obj/**;bin/**" />
   </ItemGroup>
