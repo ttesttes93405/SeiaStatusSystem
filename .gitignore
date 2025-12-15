@@ -1,0 +1,22 @@
+
+**/[Oo]bj/
+**/[Bb]in/
+packages/
+artifacts/
+.nuget/
+
+*.user
+*.suo
+*.userprefs
+*DS_Store
+*.sln.ide
+
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/

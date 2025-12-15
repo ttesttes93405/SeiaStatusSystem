@@ -1,0 +1,17 @@
+{
+  "name": "com.owensun.seia-status-effect-system",
+  "version": "1.0.0",
+  "displayName": "Seia Status Effect System",
+  "description": "A buff system for Unity projects",
+  "unity": "2021.3",
+  "keywords": [
+    "blue",
+    "archive",
+    "buff",
+    "status"
+  ],
+  "author": {
+    "name": "Owen"
+  },
+  "dependencies": {}
+}
