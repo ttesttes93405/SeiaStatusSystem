@@ -1,7 +1,7 @@
 {
-  "name": "com.owensun.seia-status-effect-system",
+  "name": "com.owensun.seia-status-system",
   "version": "1.0.0",
-  "displayName": "Seia Status Effect System",
+  "displayName": "Seia Status System",
   "description": "A buff system for Unity projects",
   "unity": "2021.3",
   "keywords": [
@@ -11,7 +11,7 @@
     "status"
   ],
   "author": {
-    "name": "Owen"
+    "name": "Owen Sun"
   },
   "dependencies": {}
 }
