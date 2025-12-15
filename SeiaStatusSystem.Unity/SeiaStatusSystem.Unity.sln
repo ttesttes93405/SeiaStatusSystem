@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEngine.UI", "UnityEngi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.VisualStudio.Editor", "Unity.VisualStudio.Editor.csproj", "{E850C2F4-C1A9-6FD9-464A-B12CB431C2D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{9AAC420D-9937-838D-A534-51DDF88C0D2E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeiaStatusSystem.Samples", "SeiaStatusSystem.Samples.csproj", "{3411644F-0ACF-A1AE-5DE0-FD9FF5994B51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +39,10 @@ Global
 		{E850C2F4-C1A9-6FD9-464A-B12CB431C2D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E850C2F4-C1A9-6FD9-464A-B12CB431C2D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E850C2F4-C1A9-6FD9-464A-B12CB431C2D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9AAC420D-9937-838D-A534-51DDF88C0D2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9AAC420D-9937-838D-A534-51DDF88C0D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9AAC420D-9937-838D-A534-51DDF88C0D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9AAC420D-9937-838D-A534-51DDF88C0D2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3411644F-0ACF-A1AE-5DE0-FD9FF5994B51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3411644F-0ACF-A1AE-5DE0-FD9FF5994B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3411644F-0ACF-A1AE-5DE0-FD9FF5994B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3411644F-0ACF-A1AE-5DE0-FD9FF5994B51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
