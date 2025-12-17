@@ -1,7 +1,8 @@
 
 # Unity
-SeiaStatusSystem.Unity/**/*
-!SeiaStatusSystem.Unity/Assets/**/*
+SeiaStatusSystem.Unity/*
+!SeiaStatusSystem.Unity/Assets/
+!SeiaStatusSystem.Unity/Assets/**
 
 # common
 **/[Oo]bj/
