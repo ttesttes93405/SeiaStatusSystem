@@ -23,7 +23,7 @@ namespace SeiaStatusSystem.Core
         internal readonly ObjectPool<Dictionary<int, Action<float>>> subscriptionsPool;
 
         readonly Queue<StatusEntity<TStatusType>> pendingApplyStatus = new();
-        readonly Queue<StatusEntityToken> pendingRemoveEntityTokens = new();
+        readonly HashSet<StatusEntityToken> pendingRemovalEntityTokens = new();
 
 
 
@@ -136,7 +136,7 @@ namespace SeiaStatusSystem.Core
 
                     if (IsExpired(statusEntity, CurrentTime) == true)
                     {
-                        pendingRemoveEntityTokens.Enqueue(statusEntity.Token);
+                        pendingRemovalEntityTokens.Add(statusEntity.Token);
                     }
                 }
             }
@@ -146,6 +146,12 @@ namespace SeiaStatusSystem.Core
                 while (pendingApplyStatus.Count > 0)
                 {
                     var statusEntity = pendingApplyStatus.Dequeue();
+
+                    if (pendingRemovalEntityTokens.Remove(statusEntity.Token))
+                    {
+                        StatusEntityEffectSubscriptions.Remove(statusEntity.Token);
+                        continue;
+                    }
 
                     applyStatusEntityTokens.Add(statusEntity.Token);
 
@@ -175,28 +181,20 @@ namespace SeiaStatusSystem.Core
 
             void ProcessPendingRemovals(ICollection<StatusEntityToken> applyStatusEntityTokens, ICollection<StatusEntityToken> removeStatusEntityTokens, ICollection<TargetTypeToken<TStatusType>> modifiedTargetTypeTokens)
             {
-                while (pendingRemoveEntityTokens.Count > 0)
+                foreach (var statusEntityToken in pendingRemovalEntityTokens)
                 {
-                    var statusEntityToken = pendingRemoveEntityTokens.Dequeue();
-
-                    if (applyStatusEntityTokens.Contains(statusEntityToken) == true)
-                    {
-                        applyStatusEntityTokens.Remove(statusEntityToken);
-                    }
-                    else
-                    {
-                        removeStatusEntityTokens.Add(statusEntityToken);
-                    }
-
                     checkExpiredStatus.Remove(statusEntityToken);
 
                     if (statusEntityDatabase.TryGetByEntityToken(statusEntityToken, out var statusEntity) == true)
                     {
+                        removeStatusEntityTokens.Add(statusEntityToken);
                         statusEntityDatabase.Remove(statusEntityToken);
                         var key = new TargetTypeToken<TStatusType>(statusEntity.TargetToken, statusEntity.Info.Type);
                         modifiedTargetTypeTokens.Add(key);
                     }
                 }
+
+                pendingRemovalEntityTokens.Clear();
             }
 
 
@@ -278,7 +276,7 @@ namespace SeiaStatusSystem.Core
 
             foreach (var statusEntity in pendingApplyStatus)
             {
-                if (statusEntity.Token == statusEntityToken)
+                if (statusEntity.Token == statusEntityToken && pendingRemovalEntityTokens.Contains(statusEntityToken) == false)
                     return true;
             }
             return false;
@@ -308,16 +306,27 @@ namespace SeiaStatusSystem.Core
         {
             ThrowIfDisposed();
 
-            if (statusEntityDatabase.TryGetByTargetToken(targetToken, out var statusEntities) == false)
+            if (tag == Tag.None)
             {
-                return;
+                throw new ArgumentException("Tag.None cannot be used to remove statuses by tag.", nameof(tag));
             }
 
-            foreach (var statusEntity in statusEntities)
+            if (statusEntityDatabase.TryGetByTargetToken(targetToken, out var statusEntities) == true)
             {
-                if (statusEntity.Info.Tag == tag)
+                foreach (var statusEntity in statusEntities)
                 {
-                    pendingRemoveEntityTokens.Enqueue(statusEntity.Token);
+                    if (statusEntity.Info.Tag == tag)
+                    {
+                        pendingRemovalEntityTokens.Add(statusEntity.Token);
+                    }
+                }
+            }
+
+            foreach (var statusEntity in pendingApplyStatus)
+            {
+                if (statusEntity.TargetToken == targetToken && statusEntity.Info.Tag == tag)
+                {
+                    pendingRemovalEntityTokens.Add(statusEntity.Token);
                 }
             }
         }
@@ -326,12 +335,7 @@ namespace SeiaStatusSystem.Core
         {
             ThrowIfDisposed();
 
-            if (statusEntityDatabase.TryGetByEntityToken(entityToken, out var statusEntity) == false)
-            {
-                return;
-            }
-
-            pendingRemoveEntityTokens.Enqueue(statusEntity.Token);
+            pendingRemovalEntityTokens.Add(entityToken);
 
         }
 
@@ -339,14 +343,20 @@ namespace SeiaStatusSystem.Core
         {
             ThrowIfDisposed();
 
-            if (statusEntityDatabase.TryGetByTargetToken(targetToken, out var statusEntities) == false)
+            if (statusEntityDatabase.TryGetByTargetToken(targetToken, out var statusEntities) == true)
             {
-                return;
+                foreach (var statusEntity in statusEntities)
+                {
+                    pendingRemovalEntityTokens.Add(statusEntity.Token);
+                }
             }
 
-            foreach (var statusEntity in statusEntities)
+            foreach (var statusEntity in pendingApplyStatus)
             {
-                pendingRemoveEntityTokens.Enqueue(statusEntity.Token);
+                if (statusEntity.TargetToken == targetToken)
+                {
+                    pendingRemovalEntityTokens.Add(statusEntity.Token);
+                }
             }
         }
 
@@ -389,7 +399,7 @@ namespace SeiaStatusSystem.Core
             IsDisposed = true;
 
             pendingApplyStatus.Clear();
-            pendingRemoveEntityTokens.Clear();
+            pendingRemovalEntityTokens.Clear();
             statusValues.Clear();
             targetTypeSubscriptions.Clear();
 

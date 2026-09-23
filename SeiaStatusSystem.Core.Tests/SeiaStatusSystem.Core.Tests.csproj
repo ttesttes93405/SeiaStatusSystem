@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Version>1.0.0</Version>
     <Nullable>enable</Nullable>
     <OutputPath>bin/</OutputPath>
@@ -13,6 +13,15 @@
 
   <ItemGroup>
     <Compile Include="**/*.cs" Exclude="obj/**;bin/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../SeiaStatusSystem.Core/SeiaStatusSystem.Core.csproj" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
