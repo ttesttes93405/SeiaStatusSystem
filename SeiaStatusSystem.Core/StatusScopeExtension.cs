@@ -159,16 +159,13 @@ namespace SeiaStatusSystem.Core
         {
             statusScope.ThrowIfDisposed();
 
-            float v = modifier.Get(statusScope, out var value);
-            float v1 = value;
-
             var targetToken = modifier.TargetToken;
 
             var handler1 = Subscribe(statusScope, targetToken, modifier.StatusType1, (v) => modifier.CalculateValue(v), executeAfterSubscribe: false);
 
             if (executeAfterSubscribe)
             {
-                modifier.CalculateValue(v1);
+                modifier.CalculateValue(statusScope.GetStatusValue(targetToken, modifier.StatusType1));
             }
 
             return CreateDisposable(handler1);
@@ -185,17 +182,18 @@ namespace SeiaStatusSystem.Core
         {
             statusScope.ThrowIfDisposed();
 
-            float v = modifier.Get(statusScope, out var values);
-            (float v1, float v2) = values;
-
             var targetToken = modifier.TargetToken;
 
-            var handler1 = Subscribe(statusScope, targetToken, modifier.StatusType1, v => modifier.CalculateValue(v, v2), executeAfterSubscribe: false);
-            var handler2 = Subscribe(statusScope, targetToken, modifier.StatusType2, v => modifier.CalculateValue(v1, v), executeAfterSubscribe: false);
+            void Recalculate() => modifier.CalculateValue(
+                statusScope.GetStatusValue(targetToken, modifier.StatusType1),
+                statusScope.GetStatusValue(targetToken, modifier.StatusType2));
+
+            var handler1 = Subscribe(statusScope, targetToken, modifier.StatusType1, _ => Recalculate(), executeAfterSubscribe: false);
+            var handler2 = Subscribe(statusScope, targetToken, modifier.StatusType2, _ => Recalculate(), executeAfterSubscribe: false);
 
             if (executeAfterSubscribe)
             {
-                modifier.CalculateValue(v1, v2);
+                Recalculate();
             }
 
             return CreateDisposable(handler1, handler2);
@@ -211,18 +209,20 @@ namespace SeiaStatusSystem.Core
         {
             statusScope.ThrowIfDisposed();
 
-            float v = modifier.Get(statusScope, out var values);
-            (float v1, float v2, float v3) = values;
-
             var targetToken = modifier.TargetToken;
 
-            var handler1 = Subscribe(statusScope, targetToken, modifier.StatusType1, v => modifier.CalculateValue(v, v2, v3), executeAfterSubscribe: false);
-            var handler2 = Subscribe(statusScope, targetToken, modifier.StatusType2, v => modifier.CalculateValue(v1, v, v3), executeAfterSubscribe: false);
-            var handler3 = Subscribe(statusScope, targetToken, modifier.StatusType3, v => modifier.CalculateValue(v1, v2, v), executeAfterSubscribe: false);
+            void Recalculate() => modifier.CalculateValue(
+                statusScope.GetStatusValue(targetToken, modifier.StatusType1),
+                statusScope.GetStatusValue(targetToken, modifier.StatusType2),
+                statusScope.GetStatusValue(targetToken, modifier.StatusType3));
+
+            var handler1 = Subscribe(statusScope, targetToken, modifier.StatusType1, _ => Recalculate(), executeAfterSubscribe: false);
+            var handler2 = Subscribe(statusScope, targetToken, modifier.StatusType2, _ => Recalculate(), executeAfterSubscribe: false);
+            var handler3 = Subscribe(statusScope, targetToken, modifier.StatusType3, _ => Recalculate(), executeAfterSubscribe: false);
 
             if (executeAfterSubscribe)
             {
-                modifier.CalculateValue(v1, v2, v3);
+                Recalculate();
             }
 
             return CreateDisposable(handler1, handler2, handler3);
@@ -238,19 +238,22 @@ namespace SeiaStatusSystem.Core
         {
             statusScope.ThrowIfDisposed();
 
-            float v = modifier.Get(statusScope, out var values);
-            (float v1, float v2, float v3, float v4) = values;
-
             var targetToken = modifier.TargetToken;
 
-            var handler1 = Subscribe(statusScope, targetToken, modifier.StatusType1, v => modifier.CalculateValue(v, v2, v3, v4), executeAfterSubscribe: false);
-            var handler2 = Subscribe(statusScope, targetToken, modifier.StatusType2, v => modifier.CalculateValue(v1, v, v3, v4), executeAfterSubscribe: false);
-            var handler3 = Subscribe(statusScope, targetToken, modifier.StatusType3, v => modifier.CalculateValue(v1, v2, v, v4), executeAfterSubscribe: false);
-            var handler4 = Subscribe(statusScope, targetToken, modifier.StatusType4, v => modifier.CalculateValue(v1, v2, v3, v), executeAfterSubscribe: false);
+            void Recalculate() => modifier.CalculateValue(
+                statusScope.GetStatusValue(targetToken, modifier.StatusType1),
+                statusScope.GetStatusValue(targetToken, modifier.StatusType2),
+                statusScope.GetStatusValue(targetToken, modifier.StatusType3),
+                statusScope.GetStatusValue(targetToken, modifier.StatusType4));
+
+            var handler1 = Subscribe(statusScope, targetToken, modifier.StatusType1, _ => Recalculate(), executeAfterSubscribe: false);
+            var handler2 = Subscribe(statusScope, targetToken, modifier.StatusType2, _ => Recalculate(), executeAfterSubscribe: false);
+            var handler3 = Subscribe(statusScope, targetToken, modifier.StatusType3, _ => Recalculate(), executeAfterSubscribe: false);
+            var handler4 = Subscribe(statusScope, targetToken, modifier.StatusType4, _ => Recalculate(), executeAfterSubscribe: false);
 
             if (executeAfterSubscribe)
             {
-                modifier.CalculateValue(v1, v2, v3, v4);
+                Recalculate();
             }
 
             return CreateDisposable(handler1, handler2, handler3, handler4);
