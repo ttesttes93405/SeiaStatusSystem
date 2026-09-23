@@ -43,7 +43,7 @@ namespace SeiaStatusSystem.Core
         }
 
 
-        public static IDisposable SuscribeEffect<TStatusType, TStatusInfo>(
+        public static IDisposable SubscribeEffect<TStatusType, TStatusInfo>(
             this StatusScope<TStatusType, TStatusInfo> statusScope,
             StatusEntityToken statusEntityToken,
             Func<Action> statusEffect
@@ -109,6 +109,18 @@ namespace SeiaStatusSystem.Core
                     }
                 }
             }
+        }
+
+        [Obsolete("Use SubscribeEffect instead.")]
+        public static IDisposable SuscribeEffect<TStatusType, TStatusInfo>(
+            this StatusScope<TStatusType, TStatusInfo> statusScope,
+            StatusEntityToken statusEntityToken,
+            Func<Action> statusEffect
+        )
+            where TStatusType : Enum
+            where TStatusInfo : IStatusInfo<TStatusType>
+        {
+            return SubscribeEffect(statusScope, statusEntityToken, statusEffect);
         }
 
 

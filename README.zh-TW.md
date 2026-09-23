@@ -12,7 +12,7 @@
 
 - **確定性時序**：所有狀態更新由開發者明確觸發，讓伺服器端可精確同步、重播。
 
-- **明確的 Scope**：由 `StatusSystem` 建構的 `StatusScope`，可以透過 `using` 語法明確限制作用範圍，避免記憶體泄露。
+- **明確的 Scope**：由 `StatusSystem` 建構的 `StatusScope`，可以透過 `using` 語法明確限制作用範圍，避免記憶體洩漏。
 
 - **訂閱狀態**：輕鬆訂閱狀態數值變化，讓副作用可在外部處理，提升可測試性與維護度。
 
@@ -45,7 +45,7 @@ StatusSystem
 {
     StatusScope
     {
-        StatusEnity[]
+        StatusEntity[]
     }    
 }
 ```
@@ -67,7 +67,7 @@ struct MyStatusInfo : IStatusInfo<MyStatusType>
     public TimeSpan? Duration { get; init; }
     public float Value { get; init; }
     public Tag Tag { get; init; }
-    // add other infos if you need
+    // Add other fields if needed.
 }
 ```
 
@@ -78,7 +78,7 @@ public class Game
 {
     public void Init()
     {
-        // creating new status system via your status type and info to 
+        // Create a status system from the status type and info type.
         var statusSystem = new StatusSystem<MyStatusType, MyStatusInfo>();
     }
 }
@@ -132,7 +132,7 @@ async UniTask GamePlay(StatusSystem statusSystem)
             }
 
             var time = TimeSpan.FromSeconds(Time.time - startTime);
-            statusScope.Update(time);  // update time manual
+            statusScope.Update(time);  // Update time manually.
 
             await UniTask.Yield();
         }
@@ -144,4 +144,3 @@ async UniTask GamePlay(StatusSystem statusSystem)
 }
 
 ```
-

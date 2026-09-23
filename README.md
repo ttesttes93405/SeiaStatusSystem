@@ -45,7 +45,7 @@ StatusSystem
 {
     StatusScope
     {
-        StatusEnity[]
+        StatusEntity[]
     }    
 }
 ```
@@ -132,4 +132,3 @@ async UniTask GamePlay(StatusSystem<MyStatusType, MyStatusInfo> statusSystem)
 
 ## ⚙️ Note
 - StatusScope.Update can be called from any tick loop (Unity Update, server loop, coroutine, etc.).
-

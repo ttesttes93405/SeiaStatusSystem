@@ -181,7 +181,7 @@ public class Sample : MonoBehaviour
                 player.TargetToken,
                 new StatusInfo(StatusType.Def, 10)
             );
-            statusScope.SuscribeEffect(defToken, () =>
+            statusScope.SubscribeEffect(defToken, () =>
             {
                 var d = statusScope.GetStatusValue(
                     player.TargetToken,
