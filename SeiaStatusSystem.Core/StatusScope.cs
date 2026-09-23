@@ -398,16 +398,52 @@ namespace SeiaStatusSystem.Core
 
             IsDisposed = true;
 
+            var cleaners = new List<Action>();
+            foreach (var cleaner in StatusEntityEffectCleaners.Values)
+            {
+                if (cleaner == null)
+                    continue;
+
+                foreach (Action action in cleaner.GetInvocationList())
+                    cleaners.Add(action);
+            }
+            StatusEntityEffectCleaners.Clear();
+            StatusEntityEffectSubscriptions.Clear();
+
+            List<Exception>? exceptions = null;
+            foreach (var cleaner in cleaners)
+            {
+                try
+                {
+                    cleaner();
+                }
+                catch (Exception exception)
+                {
+                    (exceptions ??= new List<Exception>()).Add(exception);
+                }
+            }
+
             pendingApplyStatus.Clear();
             pendingRemovalEntityTokens.Clear();
+            checkExpiredStatus.Clear();
             statusValues.Clear();
             targetTypeSubscriptions.Clear();
 
             foreach (var d in disposables)
             {
-                d.Dispose();
+                try
+                {
+                    d.Dispose();
+                }
+                catch (Exception exception)
+                {
+                    (exceptions ??= new List<Exception>()).Add(exception);
+                }
             }
             disposables.Clear();
+
+            if (exceptions != null)
+                throw new AggregateException("One or more status scope resources could not be cleaned up.", exceptions);
         }
 
     }

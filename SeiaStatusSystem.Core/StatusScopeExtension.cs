@@ -68,7 +68,14 @@ namespace SeiaStatusSystem.Core
             if (isPending == true)
             {
                 var effectSubs = statusScope.StatusEntityEffectSubscriptions;
-                effectSubs[statusEntityToken] = ApplyEffect;
+                if (effectSubs.TryGetValue(statusEntityToken, out var existingSubscription))
+                {
+                    effectSubs[statusEntityToken] = existingSubscription + ApplyEffect;
+                }
+                else
+                {
+                    effectSubs[statusEntityToken] = ApplyEffect;
+                }
             }
             else
             {
@@ -96,6 +103,20 @@ namespace SeiaStatusSystem.Core
 
             void CreateDisposer()
             {
+                var effectSubs = statusScope.StatusEntityEffectSubscriptions;
+                if (effectSubs.TryGetValue(statusEntityToken, out var existingSubscription))
+                {
+                    var remainingSubscriptions = existingSubscription - ApplyEffect;
+                    if (remainingSubscriptions == null)
+                    {
+                        effectSubs.Remove(statusEntityToken);
+                    }
+                    else
+                    {
+                        effectSubs[statusEntityToken] = remainingSubscriptions;
+                    }
+                }
+
                 if (effectCleaners.TryGetValue(statusEntityToken, out var existingCleaner))
                 {
                     existingCleaner -= cleaner;
